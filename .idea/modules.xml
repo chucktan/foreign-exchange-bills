@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/foreign-exchange-bills.iml" filepath="$PROJECT_DIR$/foreign-exchange-bills.iml" />
+      <module fileurl="file://$PROJECT_DIR$/foreign-exchange-bills-api/foreign-exchange-bills-api.iml" filepath="$PROJECT_DIR$/foreign-exchange-bills-api/foreign-exchange-bills-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/foreign-exchange-bills-common/foreign-exchange-bills-common.iml" filepath="$PROJECT_DIR$/foreign-exchange-bills-common/foreign-exchange-bills-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/foreign-exchange-bills-mapper/foreign-exchange-bills-mapper.iml" filepath="$PROJECT_DIR$/foreign-exchange-bills-mapper/foreign-exchange-bills-mapper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/foreign-exchange-bills-pojo/foreign-exchange-bills-pojo.iml" filepath="$PROJECT_DIR$/foreign-exchange-bills-pojo/foreign-exchange-bills-pojo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/foreign-exchange-bills-service/foreign-exchange-bills-service.iml" filepath="$PROJECT_DIR$/foreign-exchange-bills-service/foreign-exchange-bills-service.iml" />
+    </modules>
+  </component>
+</project>
