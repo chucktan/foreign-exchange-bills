@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.foreign.exchange.mapper.FinanceRatePriceMapper" >
+  <resultMap id="BaseResultMap" type="com.foreign.exchange.pojo.FinanceRatePrice" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="finance_rate_id" property="financeRateId" jdbcType="VARCHAR" />
+    <result column="curreny_code" property="currenyCode" jdbcType="VARCHAR" />
+    <result column="close_price" property="closePrice" jdbcType="DECIMAL" />
+    <result column="diff_percent" property="diffPercent" jdbcType="DECIMAL" />
+    <result column="diff_amount" property="diffAmount" jdbcType="DECIMAL" />
+    <result column="open_price" property="openPrice" jdbcType="DECIMAL" />
+    <result column="hign_price" property="hignPrice" jdbcType="DECIMAL" />
+    <result column="low_price" property="lowPrice" jdbcType="DECIMAL" />
+    <result column="price_range" property="priceRange" jdbcType="DECIMAL" />
+    <result column="buy_price" property="buyPrice" jdbcType="DECIMAL" />
+    <result column="sell_price" property="sellPrice" jdbcType="DECIMAL" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="yes_price" property="yesPrice" jdbcType="DECIMAL" />
+    <result column="update_date" property="updateDate" jdbcType="DATE" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>

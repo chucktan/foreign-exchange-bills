@@ -1,1 +1,4 @@
+com\foreign\exchange\mapper\TransactionInfoMapper.class
 com\foreign\exchange\my\mapper\MyMapper.class
+com\foreign\exchange\mapper\FinanceRatePriceMapper.class
+com\foreign\exchange\mapper\RmbQuoteMapper.class

@@ -2,10 +2,12 @@ package com.foreign.exchange.pojo;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class Transactioninfo {
+@Table(name = "transaction_info")
+public class TransactionInfo {
     /**
      * 交易ID
      */

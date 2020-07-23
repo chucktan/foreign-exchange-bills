@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.foreign.exchange.mapper.RmbQuoteMapper" >
+  <resultMap id="BaseResultMap" type="com.foreign.exchange.pojo.RmbQuote" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="rmbquot_id" property="rmbquotId" jdbcType="VARCHAR" />
+    <result column="currency_code" property="currencyCode" jdbcType="VARCHAR" />
+    <result column="curreny_name" property="currenyName" jdbcType="VARCHAR" />
+    <result column="fbuy_price" property="fbuyPrice" jdbcType="DECIMAL" />
+    <result column="mbuy_price" property="mbuyPrice" jdbcType="DECIMAL" />
+    <result column="fsell_price" property="fsellPrice" jdbcType="DECIMAL" />
+    <result column="msell_price" property="msellPrice" jdbcType="DECIMAL" />
+    <result column="bank_conversion_price" property="bankConversionPrice" jdbcType="DECIMAL" />
+    <result column="update_date" property="updateDate" jdbcType="DATE" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>

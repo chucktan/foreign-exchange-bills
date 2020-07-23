@@ -6,8 +6,8 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Table(name = "finance_rate")
-public class FinanceRate {
+@Table(name = "finance_rate_price")
+public class FinanceRatePrice {
     /**
      * 汇率信息ID
      */
