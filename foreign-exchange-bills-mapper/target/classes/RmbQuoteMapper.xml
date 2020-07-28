@@ -13,9 +13,9 @@
     <result column="fsell_price" property="fsellPrice" jdbcType="DECIMAL" />
     <result column="msell_price" property="msellPrice" jdbcType="DECIMAL" />
     <result column="bank_conversion_price" property="bankConversionPrice" jdbcType="DECIMAL" />
-    <result column="update_date" property="updateDate" jdbcType="DATE" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
     <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
-    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="VARCHAR" />
   </resultMap>
 </mapper>

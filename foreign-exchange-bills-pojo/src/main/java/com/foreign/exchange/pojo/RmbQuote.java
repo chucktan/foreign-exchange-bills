@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Table(name = "rmb_quote")
 public class RmbQuote {
@@ -61,13 +60,13 @@ public class RmbQuote {
      * 发布日期
      */
     @Column(name = "update_date")
-    private Date updateDate;
+    private String updateDate;
 
     /**
      * 发布时间
      */
     @Column(name = "update_time")
-    private Date updateTime;
+    private String updateTime;
 
     /**
      * 创建人
@@ -79,7 +78,7 @@ public class RmbQuote {
      * 创建时间
      */
     @Column(name = "CREATED_TIME")
-    private Date createdTime;
+    private String createdTime;
 
     /**
      * 获取牌价ID
@@ -230,7 +229,7 @@ public class RmbQuote {
      *
      * @return update_date - 发布日期
      */
-    public Date getUpdateDate() {
+    public String getUpdateDate() {
         return updateDate;
     }
 
@@ -239,7 +238,7 @@ public class RmbQuote {
      *
      * @param updateDate 发布日期
      */
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
     }
 
@@ -248,7 +247,7 @@ public class RmbQuote {
      *
      * @return update_time - 发布时间
      */
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
@@ -257,7 +256,7 @@ public class RmbQuote {
      *
      * @param updateTime 发布时间
      */
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -284,7 +283,7 @@ public class RmbQuote {
      *
      * @return CREATED_TIME - 创建时间
      */
-    public Date getCreatedTime() {
+    public String getCreatedTime() {
         return createdTime;
     }
 
@@ -293,7 +292,25 @@ public class RmbQuote {
      *
      * @param createdTime 创建时间
      */
-    public void setCreatedTime(Date createdTime) {
+    public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
+    }
+
+    @Override
+    public String toString() {
+        return "RmbQuote{" +
+                "rmbquotId='" + rmbquotId + '\'' +
+                ", currencyCode='" + currencyCode + '\'' +
+                ", currenyName='" + currenyName + '\'' +
+                ", fbuyPrice=" + fbuyPrice +
+                ", mbuyPrice=" + mbuyPrice +
+                ", fsellPrice=" + fsellPrice +
+                ", msellPrice=" + msellPrice +
+                ", bankConversionPrice=" + bankConversionPrice +
+                ", updateDate='" + updateDate + '\'' +
+                ", updateTime='" + updateTime + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdTime='" + createdTime + '\'' +
+                '}';
     }
 }

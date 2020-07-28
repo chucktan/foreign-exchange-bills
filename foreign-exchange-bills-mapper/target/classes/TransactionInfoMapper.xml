@@ -14,6 +14,6 @@
     <result column="fee" property="fee" jdbcType="DECIMAL" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
-    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="VARCHAR" />
   </resultMap>
 </mapper>

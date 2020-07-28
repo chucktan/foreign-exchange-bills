@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Table(name = "finance_rate_price")
 public class FinanceRatePrice {
@@ -90,19 +89,19 @@ public class FinanceRatePrice {
      * 日期
      */
     @Column(name = "update_date")
-    private Date updateDate;
+    private String updateDate;
 
     /**
      * 数据时间
      */
     @Column(name = "update_time")
-    private Date updateTime;
+    private String updateTime;
 
     /**
      * 创建时间
      */
     @Column(name = "CREATED_TIME")
-    private Date createdTime;
+    private String createdTime;
 
     /**
      * 创建人
@@ -349,7 +348,7 @@ public class FinanceRatePrice {
      *
      * @return update_date - 日期
      */
-    public Date getUpdateDate() {
+    public String getUpdateDate() {
         return updateDate;
     }
 
@@ -358,7 +357,7 @@ public class FinanceRatePrice {
      *
      * @param updateDate 日期
      */
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
     }
 
@@ -367,7 +366,7 @@ public class FinanceRatePrice {
      *
      * @return update_time - 数据时间
      */
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
@@ -376,7 +375,7 @@ public class FinanceRatePrice {
      *
      * @param updateTime 数据时间
      */
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -385,7 +384,7 @@ public class FinanceRatePrice {
      *
      * @return CREATED_TIME - 创建时间
      */
-    public Date getCreatedTime() {
+    public String getCreatedTime() {
         return createdTime;
     }
 
@@ -394,7 +393,7 @@ public class FinanceRatePrice {
      *
      * @param createdTime 创建时间
      */
-    public void setCreatedTime(Date createdTime) {
+    public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
     }
 

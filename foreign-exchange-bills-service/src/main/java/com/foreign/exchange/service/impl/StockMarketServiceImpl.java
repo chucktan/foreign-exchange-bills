@@ -2,12 +2,14 @@ package com.foreign.exchange.service.impl;
 
 import com.foreign.exchange.pojo.Vo.StockPriceVo;
 import com.foreign.exchange.service.StockMarketService;
-import com.foreign.exchange.utils.HttpRequestUtils;
+import com.foreign.exchange.utils.HttpUtil;
+import org.springframework.stereotype.Service;
 
 /**
  * @author
  * @create 2020-07-23-16:38
  */
+@Service
 public class StockMarketServiceImpl implements StockMarketService {
 
     private  static  final  String STOCK_URL_PREFIX = "http://hq.sinajs.cn/list=";
@@ -18,7 +20,7 @@ public class StockMarketServiceImpl implements StockMarketService {
             throw new  RuntimeException("无法拼接fullCode"+stockCode);
         }else{
             String url = STOCK_URL_PREFIX+fullCode;
-            String stockInfoStr = HttpRequestUtils.sendGet(url,"utf-8");
+            String stockInfoStr = HttpUtil.sendGet(url,"utf-8");
             if (stockInfoStr == null){
                 return  null;
             }else {

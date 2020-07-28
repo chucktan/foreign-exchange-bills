@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Table(name = "transaction_info")
 public class TransactionInfo {
@@ -63,7 +62,7 @@ public class TransactionInfo {
      * 创建时间
      */
     @Column(name = "CREATED_TIME")
-    private Date createdTime;
+    private String createdTime;
 
     /**
      * 获取交易ID
@@ -232,7 +231,7 @@ public class TransactionInfo {
      *
      * @return CREATED_TIME - 创建时间
      */
-    public Date getCreatedTime() {
+    public String getCreatedTime() {
         return createdTime;
     }
 
@@ -241,7 +240,7 @@ public class TransactionInfo {
      *
      * @param createdTime 创建时间
      */
-    public void setCreatedTime(Date createdTime) {
+    public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
     }
 }

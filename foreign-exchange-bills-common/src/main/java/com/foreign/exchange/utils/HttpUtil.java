@@ -30,9 +30,9 @@ import java.util.*;
  * @author
  * @create 2020-07-17-16:09
  */
-public class HttpRequestUtils {
+public class HttpUtil {
 
-    private static Logger logger = LoggerFactory.getLogger(HttpRequestUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
     /**
      * 不带参数的GET请求

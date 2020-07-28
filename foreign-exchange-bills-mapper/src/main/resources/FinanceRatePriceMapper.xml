@@ -18,9 +18,9 @@
     <result column="sell_price" property="sellPrice" jdbcType="DECIMAL" />
     <result column="color" property="color" jdbcType="VARCHAR" />
     <result column="yes_price" property="yesPrice" jdbcType="DECIMAL" />
-    <result column="update_date" property="updateDate" jdbcType="DATE" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="VARCHAR" />
     <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
   </resultMap>
 </mapper>
