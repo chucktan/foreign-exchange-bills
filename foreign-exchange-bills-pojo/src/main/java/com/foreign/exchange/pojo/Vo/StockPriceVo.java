@@ -1,20 +1,20 @@
 package com.foreign.exchange.pojo.Vo;
 
 /**
- * 股票价格Vo
+ * 股票价格Vo(接口更新数据实体)
  * @author
  * @create 2020-07-23-16:35
  */
 public class StockPriceVo {
-    private String code;
-    private String name;
-    private Double preClosePrice;
-    private Double nowPrice;
-    private Double highPrice;
-    private Double lowPrice;
-    private String priceDate;
-    private String priceTime;
-    private Long updateTime;
+    private String code;//股票代码
+    private String name;//股票名称
+    private Double preClosePrice;//昨日收盘价
+    private Double nowPrice;//当前价格
+    private Double highPrice;//最高价
+    private Double lowPrice;//最低价
+    private String priceDate;//价格日期
+    private String priceTime;//价格时间
+    private Long updateTime;//更新日期
 
     public String getCode() {
         return code;

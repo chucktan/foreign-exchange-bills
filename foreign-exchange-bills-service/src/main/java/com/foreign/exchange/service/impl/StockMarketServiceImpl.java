@@ -76,10 +76,10 @@ public class StockMarketServiceImpl implements StockMarketService {
     }
 
     //单元测试
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
 //        StockMarketServiceImpl stockMarketService = new StockMarketServiceImpl();
 //        StockPriceVo stockPriceVo = stockMarketService.getStockPrice("600036");
 //        System.out.println(stockPriceVo.toString());
-//
-//    }
+
+    }
 }

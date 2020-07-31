@@ -3,6 +3,7 @@ C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bill
 C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\org\n3r\idworker\utils\HttpReq.java
 C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\org\n3r\idworker\utils\Serializes.java
 C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\org\n3r\idworker\strategy\DayPrefixRandomCodeStrategy.java
+C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\com\foreign\exchange\enums\TradeConstant.java
 C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\org\n3r\idworker\strategy\DefaultRandomCodeStrategy.java
 C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\org\n3r\idworker\utils\IPv4Utils.java
 C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\org\n3r\idworker\WorkerIdStrategy.java
@@ -16,5 +17,5 @@ C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bill
 C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\org\n3r\idworker\InvalidSystemClock.java
 C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\org\n3r\idworker\strategy\DefaultWorkerIdStrategy.java
 C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\org\n3r\idworker\utils\Ip.java
-C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\com\foreign\exchange\utils\HttpRequestUtils.java
+C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\com\foreign\exchange\utils\HttpUtil.java
 C:\Users\Administrator\IdeaProjects\foreign-exchange-bills\foreign-exchange-bills-common\src\main\java\org\n3r\idworker\utils\Utils.java

@@ -162,14 +162,14 @@ public class FinanceRateMarketServiceImpl implements FinanceRateMarketService {
 
 
     //单元测试
-    public static void main(String[] args) {
-        List list = new ArrayList();
-        //list = FinanceRateMarketServiceImpl.getExchangeRate("USD","");
-        //String result = FinanceRateMarketServiceImpl.getSerachEnHtml("20200727","USD","1");
-        FinanceRateMarketService financeRateMarketService = new FinanceRateMarketServiceImpl();
-        System.out.println( financeRateMarketService.getPrice("USD").toString());
+//    public static void main(String[] args) {
+//        List list = new ArrayList();
+//        //list = FinanceRateMarketServiceImpl.getExchangeRate("USD","");
+//        //String result = FinanceRateMarketServiceImpl.getSerachEnHtml("20200727","USD","1");
+//        FinanceRateMarketService financeRateMarketService = new FinanceRateMarketServiceImpl();
+//        System.out.println( financeRateMarketService.getPrice("USD").toString());
 //      System.out.println("总数："+list.size());
 //      System.out.println("汇总："+list.get(0).toString());
-    }
+//    }
 
 }
