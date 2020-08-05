@@ -26,7 +26,7 @@ public class StockTransactionInfoVo {
     private String pair;//交易信息201254(2001),201531(1240.1)
     private Double diffPrice;//差价
     private String sheetName;//excel对应下标名称
-    private int rowIndex;
+    private int rowIndex;//excel对应列标
 
     private List<StockPairInfoVo> pairList;
 

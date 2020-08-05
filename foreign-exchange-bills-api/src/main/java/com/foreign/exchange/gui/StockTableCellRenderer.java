@@ -1,7 +1,10 @@
 package com.foreign.exchange.gui;
 
+import com.foreign.exchange.enums.TradeConstant;
 import com.foreign.exchange.pojo.Bo.StockInfoBo;
 import com.foreign.exchange.service.StockMonitorService;
+import com.foreign.exchange.service.impl.StockMonitorServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -18,15 +21,17 @@ public class StockTableCellRenderer extends DefaultTableCellRenderer {
     private Color backgroundColor = new Color(250,250,240);
 
     private JTable stockTable;
-    private StockMonitorService stockMonitorService;
+
+    private StockMonitorServiceImpl stockMonitorServiceimpl;
 
     public void setStockTable(JTable stockTable) {
         this.stockTable = stockTable;
     }
 
-    public void setStockMonitorService(StockMonitorService stockMonitorService) {
-        this.stockMonitorService = stockMonitorService;
+    public void setStockMonitorService(StockMonitorServiceImpl stockMonitorServiceimpl) {
+        this.stockMonitorServiceimpl = stockMonitorServiceimpl;
     }
+
 
     /**
      * 返回用于绘制单元格的组件。此方法用于在绘制前适当地配置渲染器。
@@ -34,8 +39,8 @@ public class StockTableCellRenderer extends DefaultTableCellRenderer {
      * @param value
      * @param isSelected
      * @param hasFocus
-     * @param row
-     * @param column
+     * @param row  行索引
+     * @param column 列索引
      * @return
      */
     public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column){
@@ -44,11 +49,28 @@ public class StockTableCellRenderer extends DefaultTableCellRenderer {
         Font font = this.normalFont;
         if (column !=3 && column !=5){
             if (column ==2 &&value !=null){
+                //转换成的模型列
                 int modelRow = this.stockTable.convertRowIndexToModel(row);
-
-
+                StockInfoBo stockInfo = this.stockMonitorServiceimpl.getStockbyIndex(modelRow);
+                if (stockInfo !=null && stockInfo.getTradeFlag()!=null){
+                    //如果预设为买,背景为绿
+                    if (stockInfo.getTradeFlag().equals(TradeConstant.TRADE_FLAG_BUY.type)){
+                        foreground = this.dropColor;
+                        font = this.riseOrDropFont;
+                    //如果预设为卖，背景为红
+                    }else if(stockInfo.getTradeFlag().equals(TradeConstant.TRADE_FLAG_SELL.type)){
+                        foreground = Color.red;
+                        font = this.riseOrDropFont;
+                    }
+                }
+            }
+        }else if(value != null){
+            Double rate = (Double)value;
+            if (rate > 0.0D){
 
             }
+
+
         }
         return  component;
     }

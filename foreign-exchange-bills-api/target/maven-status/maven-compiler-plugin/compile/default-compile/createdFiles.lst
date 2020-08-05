@@ -1,2 +1,7 @@
+com\foreign\exchange\gui\StockTableModel.class
+com\foreign\exchange\gui\GUIMain.class
 com\foreign\exchange\aspect\ServiceLogAspect.class
+com\foreign\exchange\gui\StockTableCellRenderer.class
+com\foreign\exchange\gui\GUIApp.class
+com\foreign\exchange\gui\GUIMain$1.class
 com\foreign\exchange\Application.class

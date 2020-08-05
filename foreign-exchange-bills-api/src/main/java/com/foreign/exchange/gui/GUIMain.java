@@ -47,7 +47,7 @@ public class GUIMain {
         loadExcelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUIMain.this.handleLoadExcelButtonClick();
+//                GUIMain.this.handleLoadExcelButtonClick();
             }
         });
 

@@ -16,7 +16,7 @@ public class StockInfoBo {
     private String stockCode;//股票代码
     private String remark;//备注
     private Double newestPrice;//最新价
-    private Double newestUpOrDown;//最新方向（涨/跌）
+    private Double newestUpOrDown;//最新市场方向（涨/跌）
     private Double lastPrice;//上次价格
     private Double riseOrDrop;//涨/跌(%,通过最新价/收盘价计算)
     private Integer stockNumber;//股票数量
