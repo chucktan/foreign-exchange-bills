@@ -90,6 +90,17 @@
             <artifactId>jsoup</artifactId>
             <version>1.10.2</version>
         </dependency>
+        <!--office解析-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.8</version>
+        </dependency>
         <!--时间类 -->
         <dependency>
             <groupId>joda-time</groupId>

@@ -1,5 +1,6 @@
 package com.foreign.exchange.gui;
 
+import com.foreign.exchange.pojo.Bo.StockInfoBo;
 import com.foreign.exchange.service.StockMonitorService;
 
 import javax.swing.table.AbstractTableModel;
@@ -45,12 +46,42 @@ public class StockTableModel extends AbstractTableModel {
         return this.columnNames[column];
     }
 
-   public  Class<?> getColumnClass(int column){
+    public  Class<?> getColumnClass(int column){
        return this.columnClasses[column];
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return  null;
+        StockInfoBo stockInfo = this.stockMonitorService.getStockbyIndex(rowIndex);
+        if (stockInfo == null){
+            return  null;
+        }else{
+            Object value = null;
+            if (columnIndex == 0){
+                value = stockInfo.getStockName();
+            }else if (columnIndex == 1){
+                value = stockInfo.getStockCode();
+            }else if (columnIndex == 2){
+                value = stockInfo.getNewestPrice();
+            }else if (columnIndex == 3){
+                value = stockInfo.getNewestUpOrDown();
+            }else if (columnIndex == 4){
+                value = stockInfo.getLastPrice();
+            }else if(columnIndex == 5){
+                value = stockInfo.getRiseOrDrop();
+            }else if(columnIndex == 6){
+                value = stockInfo.getStockNumber();
+            }else if(columnIndex == 7){
+                value = stockInfo.getFeeService();
+            }else if(columnIndex == 8){
+                value = stockInfo.getFeeStamp();
+            }else if(columnIndex == 9){
+                value = stockInfo.getDiffAmount();
+            }else if(columnIndex == 10){
+                value = stockInfo.getRemark();
+            }
+            return  value;
+        }
+
     }
 }

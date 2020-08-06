@@ -22,14 +22,14 @@ public class StockTableCellRenderer extends DefaultTableCellRenderer {
 
     private JTable stockTable;
 
-    private StockMonitorServiceImpl stockMonitorServiceimpl;
+    private StockMonitorService stockMonitorService;
 
     public void setStockTable(JTable stockTable) {
         this.stockTable = stockTable;
     }
 
-    public void setStockMonitorService(StockMonitorServiceImpl stockMonitorServiceimpl) {
-        this.stockMonitorServiceimpl = stockMonitorServiceimpl;
+    public void setStockMonitorService(StockMonitorService stockMonitorService) {
+        this.stockMonitorService = stockMonitorService;
     }
 
 
@@ -51,7 +51,7 @@ public class StockTableCellRenderer extends DefaultTableCellRenderer {
             if (column ==2 &&value !=null){
                 //转换成的模型列
                 int modelRow = this.stockTable.convertRowIndexToModel(row);
-                StockInfoBo stockInfo = this.stockMonitorServiceimpl.getStockbyIndex(modelRow);
+                StockInfoBo stockInfo = this.stockMonitorService.getStockbyIndex(modelRow);
                 if (stockInfo !=null && stockInfo.getTradeFlag()!=null){
                     //如果预设为买,背景为绿
                     if (stockInfo.getTradeFlag().equals(TradeConstant.TRADE_FLAG_BUY.type)){
@@ -67,11 +67,16 @@ public class StockTableCellRenderer extends DefaultTableCellRenderer {
         }else if(value != null){
             Double rate = (Double)value;
             if (rate > 0.0D){
-
+                foreground = Color.red;
+                font = this.riseOrDropFont;
+            }else if(rate < 0.0D){
+                foreground = this.dropColor;
+                font = this.riseOrDropFont;
             }
 
-
         }
+        this.setForeground(foreground);
+        this.setFont(font);
         return  component;
     }
 

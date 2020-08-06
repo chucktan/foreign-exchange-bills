@@ -1,5 +1,6 @@
 package com.foreign.exchange.service;
 
+import com.foreign.exchange.pojo.Bo.StockInfoBo;
 import com.foreign.exchange.pojo.Vo.StockPriceVo;
 
 import java.util.Map;
@@ -15,4 +16,13 @@ public interface StockMonitorService {
      * @param priceMap
      */
     public  void updateStockPrice(Map<String, StockPriceVo> priceMap);
+
+    /**
+     * 根据行索引，获取List对应的stock
+     * @param rowIndex 行索引
+     * @return
+     */
+    public StockInfoBo getStockbyIndex(int rowIndex);
+
+
 }

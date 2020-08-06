@@ -67,6 +67,13 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.8" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.10.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.poi:poi:3.8" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.poi:poi-ooxml:3.8" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.poi:poi-ooxml-schemas:3.8" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.xmlbeans:xmlbeans:2.3.0" level="project" />
+    <orderEntry type="library" name="Maven: stax:stax-api:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: dom4j:dom4j:1.6.1" level="project" />
+    <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.4.01" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.4" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.41" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.0" level="project" />

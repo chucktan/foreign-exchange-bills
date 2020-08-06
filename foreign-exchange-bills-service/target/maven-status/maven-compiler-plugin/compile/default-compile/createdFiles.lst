@@ -1,4 +1,9 @@
 com\foreign\exchange\service\FinanceRateMarketService.class
+com\foreign\exchange\service\impl\ParseExcelServiceImpl.class
+com\foreign\exchange\service\ParseExcelService.class
 com\foreign\exchange\service\StockMonitorListener.class
+com\foreign\exchange\service\BillUtils.class
+com\foreign\exchange\service\AbstractParseExcelService.class
 com\foreign\exchange\service\impl\FinanceRateMarketServiceImpl.class
+com\foreign\exchange\service\CalcStockContext.class
 com\foreign\exchange\service\impl\StockMonitorServiceImpl.class
