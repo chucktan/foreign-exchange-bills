@@ -5,6 +5,7 @@ import com.foreign.exchange.pojo.TransactionInfo;
 import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
 import com.foreign.exchange.service.AbstractParseExcelService;
 import com.foreign.exchange.service.BillUtils;
+import com.foreign.exchange.service.CalcStockContext;
 import com.foreign.exchange.service.ParseExcelService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -201,8 +203,38 @@ public class ParseExcelServiceImpl  extends AbstractParseExcelService implements
      * @param stockInfo
      */
     public void calcOneStock(StockInfoBo stockInfo){
-        List<StockTransactionInfoVo> list = stockInfo.getTransactionList();
-        BillUtils.clearRecordPair(list);
+        List<StockTransactionInfoVo> recordList = stockInfo.getTransactionList();
+        BillUtils.clearRecordPair(recordList);
+        CalcStockContext calcCtx = new CalcStockContext();
+
+        for (int i=0;i<recordList.size();++i){
+            StockTransactionInfoVo currRecord = (StockTransactionInfoVo) recordList.get(i);
+            //卖
+            if (BillUtils.isCloseRecord(currRecord)){
+                calcCtx.initRecord(currRecord);
+                //遍历该交易以前的所有交易
+                for (int j=i-1;j>0;--j){
+                    StockTransactionInfoVo preRecord= (StockTransactionInfoVo) recordList.get(j);
+                    calcCtx.buildPair(preRecord);
+                    if (calcCtx.getCurrTradeNumber()<=0){
+                        break;
+                    }
+                }
+
+                calcCtx.finishRecord();
+            }
+        }
+        Double lastPrice = null;
+        int stockNumber = 0;
+        BigDecimal diffAmount = new BigDecimal(0);
+        BigDecimal feeService = new BigDecimal(0);
+        BigDecimal feeStamp = new BigDecimal(0);
+        Iterator iterator = recordList.iterator();
+
+        while(iterator.hasNext()){
+            StockTransactionInfoVo currRecord = (StockTransactionInfoVo)iterator.next();
+//            currRecord.setPair(BillUtils.);
+        }
 
     }
 }
