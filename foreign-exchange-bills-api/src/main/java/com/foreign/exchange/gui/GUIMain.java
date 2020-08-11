@@ -1,12 +1,15 @@
 package com.foreign.exchange.gui;
 
 import com.foreign.exchange.pojo.Bo.StockInfoBo;
-import com.foreign.exchange.service.ParseExcelService;
-import com.foreign.exchange.service.StockMonitorService;
+import com.foreign.exchange.service.stock.StockMonitorListener;
+import com.foreign.exchange.service.stock.StockParseExcelService;
+import com.foreign.exchange.service.stock.StockMonitorService;
+import com.foreign.exchange.service.stock.StockUpdateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
@@ -16,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.List;
 
 /**
  *GUI界面
@@ -26,19 +30,48 @@ public class GUIMain {
     private Logger logger = LoggerFactory.getLogger(GUIMain.class);
     //根据最新的股票价格更新股票相关信息
     private StockMonitorService stockMonitorService;
-    //处理Excel文件导入
-//    private ParseExcelService parseExcelService;
-    //计算利润
+    //处理Excel文件导入,更新交易信息，计算交易对和交易利润
+    private StockParseExcelService stockParseExcelService;
+    //更新股票价格
+    private StockUpdateService stockUpdateService;
 
     private JFrame rootFrame;
     private JFileChooser fileChooser;
     private JTable stockTable;
     private StockTableModel stockTableModel;
+    private StockTransactionDialog stockTransactionDialog;
 
+
+    public void setStockMonitorService(StockMonitorService stockMonitorService) {
+        this.stockMonitorService = stockMonitorService;
+    }
+
+    public void setStockParseExcelService(StockParseExcelService stockParseExcelService) {
+        this.stockParseExcelService = stockParseExcelService;
+    }
+
+    public void setStockUpdateService(StockUpdateService stockUpdateService) {
+        this.stockUpdateService = stockUpdateService;
+    }
 
     public void render(){
         this.rootFrame = new JFrame("股票列表");
         this.rootFrame.setDefaultCloseOperation(3);
+        this.createNorthPanel(this.rootFrame);
+        this.createCenterPanel(this.rootFrame);
+        this.initFileChooser();
+        this.stockTransactionDialog = new StockTransactionDialog();
+        this.stockTransactionDialog.init(this.rootFrame);
+        this.rootFrame.setUndecorated(false);
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Rectangle bounds = new Rectangle(screenSize);
+        this.rootFrame.setBounds(bounds);
+        this.rootFrame.setExtendedState(6);
+        this.rootFrame.setVisible(true);
+        this.rootFrame.toFront();
+
+
     }
 
     /**
@@ -57,7 +90,7 @@ public class GUIMain {
         loadExcelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                GUIMain.this.handleLoadExcelButtonClick();
+                GUIMain.this.handleLoadExcelButtonClick();
             }
         });
 
@@ -126,7 +159,9 @@ public class GUIMain {
         this.stockTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-//                GUIMain.this.handle
+
+             GUIMain.this.handleStockRowDoubleClick(e);
+
             }
         });
 
@@ -135,8 +170,59 @@ public class GUIMain {
 
     }
 
+    private  void initFileChooser(){
+        String userDir = System.getProperty("user.dir");
+        this.fileChooser = new JFileChooser(userDir);
+        FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                if (f.isDirectory()){
+                    return  true;
+                }else{
+                    String fn = f.getName();
+                    return  fn.endsWith(".xlsx");
+                }
+            }
+            public  String getDescription(){
+                return "xlsx";
+            }
+        };
+
+        this.fileChooser.setFileFilter((filter));
+    }
+
+    private  void listenStockTradeFlag(){
+        this.stockMonitorService.setStockMonitorListener(new StockMonitorListener() {
+            @Override
+            public void fireTableDataChanged() {
+                int selectedRowIndex = GUIMain.this.stockTable.getSelectedRow();
+                int stockIndex = -1;
+                StockInfoBo stockInfo =null;
+                if (selectedRowIndex >=0){
+                    stockIndex = GUIMain.this.stockTable.convertRowIndexToModel(selectedRowIndex);
+                    if (stockIndex >= 0){
+                        stockInfo = GUIMain.this.stockMonitorService.getStockbyIndex(stockIndex);
+                    }
+                }
+
+                GUIMain.this.stockTableModel.fireTableDataChanged();
+                if (stockInfo !=null){
+                    int viewIndex = GUIMain.this.stockTable.convertRowIndexToView(stockIndex);
+                    if (viewIndex >=0){
+                        GUIMain.this.stockTable.setRowSelectionInterval(viewIndex,viewIndex);
+                    }
+                }
+            }
+
+            @Override
+            public void updateTradeFlag() {
+                GUIMain.this.rootFrame.toFront();//窗口置顶
+            }
+        });
+    }
+
     /**
-     * 处理excel导入
+     * 处理excel导入,更新交易信息，计算交易对，交易利润，更新股票价格
      */
     private  void handleLoadExcelButtonClick(){
         Font font = this.fileChooser.getFont();
@@ -145,13 +231,33 @@ public class GUIMain {
             File excelFile = this.fileChooser.getSelectedFile();
 
             try {
-//                List<StockInfoBo> stockList  = this.par
+                //处理excel导入,更新交易信息，计算交易对，交易利润
+                List<StockInfoBo> stockList = this.stockParseExcelService.parseFile(excelFile);
+                this.stockMonitorService.setStockList(stockList);
+                //更新股票价格
+                this.stockUpdateService.startUpdateEveryTime();
             }catch (Exception ex){
-
+                this.logger.error("解析excel出错",ex);
             }
         }
+    }
 
-
+    /**
+     *
+     */
+    private  void handleStockRowDoubleClick(MouseEvent e){
+        if (e.getClickCount()==2){
+            int selectedRowIndex = this.stockTable.getSelectedRow();
+            if(selectedRowIndex !=-1){
+                selectedRowIndex = this.stockTable.convertRowIndexToModel(selectedRowIndex);
+                StockInfoBo stockInfo = this.stockMonitorService.getStockbyIndex(selectedRowIndex);
+                if (stockInfo == null){
+                    System.out.println("没有找到股票信息");
+                }else {
+                    this.stockTransactionDialog.showTransactionList(stockInfo);
+                }
+            }
+        }
     }
 
 }

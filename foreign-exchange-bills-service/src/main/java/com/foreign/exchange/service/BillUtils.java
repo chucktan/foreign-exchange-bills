@@ -1,7 +1,6 @@
 package com.foreign.exchange.service;
 
 import com.foreign.exchange.pojo.Vo.StockPairInfoVo;
-import com.foreign.exchange.pojo.Vo.StockPriceVo;
 import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
 
 import java.util.Iterator;
@@ -29,26 +28,26 @@ public class BillUtils {
     }
 
     /**
-     * 买
+     * 卖
      * @param transactionInfo
      * @return
      */
     public  static  boolean isCloseRecord(StockTransactionInfoVo transactionInfo)
     {
-        return "买".equals(transactionInfo.getBuyOrSell());
-    }
-
-    /**
-     * 卖
-     * @param transactionInfo
-     * @return
-     */
-    public  static  boolean isOpenRecord(StockTransactionInfoVo transactionInfo){
         return "卖".equals(transactionInfo.getBuyOrSell());
     }
 
     /**
-     * 计算剩余可交易数量
+     * 买
+     * @param transactionInfo
+     * @return
+     */
+    public  static  boolean isOpenRecord(StockTransactionInfoVo transactionInfo){
+        return "买".equals(transactionInfo.getBuyOrSell());
+    }
+
+    /**
+     * 计算剩余可交易数量=当前stockNumber-sum(所有pair.stockNum)
      * @param record
      * @return
      */
@@ -65,6 +64,12 @@ public class BillUtils {
 
     }
 
+    /**
+     * 编辑交易数量（20）,（15）
+     * @param pairList
+     * @param tradeNumber
+     * @return
+     */
     public  static  String makePairAttr(List<StockPairInfoVo> pairList,int tradeNumber){
         if (pairList !=null && !pairList.isEmpty()){
             StringBuffer sb = new StringBuffer();

@@ -28,7 +28,7 @@ public class StockTransactionInfoVo {
     private String sheetName;//excel对应下标名称
     private int rowIndex;//excel对应列标
 
-    private List<StockPairInfoVo> pairList;
+    private List<StockPairInfoVo> pairList;//1（20）,2（50）
 
     public String getDate() {
         return this.date;
@@ -165,7 +165,7 @@ public class StockTransactionInfoVo {
                    String[] pairStrings = this.pair.split(",");
                    int pairLen = pairStrings.length;
 
-                   //分批处理每个交易,类200062(10000),120051(2300.25)
+                   //分批处理每个交易,1(20),3(30.25)
                    for (int i=0;i<pairLen;i++){
                         String pairStr = pairStrings[i].trim();
                         int start = pairStr.indexOf("(");

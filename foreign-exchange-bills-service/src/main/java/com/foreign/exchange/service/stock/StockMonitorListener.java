@@ -1,4 +1,4 @@
-package com.foreign.exchange.service;
+package com.foreign.exchange.service.stock;
 
 /**
  * @author

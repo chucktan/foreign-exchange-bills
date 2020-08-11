@@ -1,8 +1,7 @@
-package com.foreign.exchange.service.impl;
+package com.foreign.exchange.service.impl.rate;
 
-import com.foreign.exchange.pojo.FinanceRatePrice;
 import com.foreign.exchange.pojo.RmbQuote;
-import com.foreign.exchange.service.FinanceRateMarketService;
+import com.foreign.exchange.service.rate.FinanceRateMarketService;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;

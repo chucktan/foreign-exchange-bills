@@ -1,12 +1,11 @@
-package com.foreign.exchange.service.impl;
+package com.foreign.exchange.service.stock;
 
 import com.foreign.exchange.pojo.Bo.StockInfoBo;
-import com.foreign.exchange.pojo.TransactionInfo;
 import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
 import com.foreign.exchange.service.AbstractParseExcelService;
 import com.foreign.exchange.service.BillUtils;
 import com.foreign.exchange.service.CalcStockContext;
-import com.foreign.exchange.service.ParseExcelService;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -15,24 +14,24 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
  * @author
  * @create 2020-08-06-10:18
  */
-public class ParseExcelServiceImpl  extends AbstractParseExcelService implements ParseExcelService{
+public class StockParseExcelService extends AbstractParseExcelService {
 
-    private Logger logger = LoggerFactory.getLogger(ParseExcelServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(StockParseExcelService.class);
 
 
     /**
-     *解析Excel,将数据加载到对应的stock.transaction中
+     *加载excel,构建交易信息，交易对，并计算交易利润
      * @return
      */
-    public  List<StockInfoBo> parseFile(File excelFile) throws IOException {
+    public  List<StockInfoBo> parseFile(File excelFile){
         this.logger.debug("解析Excel文件："+excelFile.getAbsolutePath());
         FileInputStream input = null;
 
@@ -52,13 +51,16 @@ public class ParseExcelServiceImpl  extends AbstractParseExcelService implements
             List<StockTransactionInfoVo> transactionList = new ArrayList<>();
             //加载次页后的交易信息
             this.loadTransactionSheet(wb,stockList,transactionList);
-            //计算交易信息
+            //计算交易信息，构建交易对
+            this.processStockInfo(stockList);
+            return  stockList;
 
         }catch (Exception ex){
-
+            throw  new RuntimeException(ex);
+        }finally {
+            IOUtils.closeQuietly(input);
         }
 
-        return  null;
     }
 
 
@@ -178,7 +180,6 @@ public class ParseExcelServiceImpl  extends AbstractParseExcelService implements
          }else
          {
              return false;
-
          }
     }
 
@@ -193,7 +194,7 @@ public class ParseExcelServiceImpl  extends AbstractParseExcelService implements
             StockInfoBo stockInfo = (StockInfoBo) iterator.next();
             List<StockTransactionInfoVo> transactionList = stockInfo.getTransactionList();
             if (transactionList.size() > 0){
-
+                this.calcOneStock(stockInfo);
             }
         }
     }
@@ -202,25 +203,24 @@ public class ParseExcelServiceImpl  extends AbstractParseExcelService implements
      * 计算单只股票交易信息
      * @param stockInfo
      */
-    public void calcOneStock(StockInfoBo stockInfo){
+    private void calcOneStock(StockInfoBo stockInfo){
         List<StockTransactionInfoVo> recordList = stockInfo.getTransactionList();
         BillUtils.clearRecordPair(recordList);
         CalcStockContext calcCtx = new CalcStockContext();
 
         for (int i=0;i<recordList.size();++i){
-            StockTransactionInfoVo currRecord = (StockTransactionInfoVo) recordList.get(i);
+            StockTransactionInfoVo currRecord = recordList.get(i);
             //卖
             if (BillUtils.isCloseRecord(currRecord)){
                 calcCtx.initRecord(currRecord);
                 //遍历该交易以前的所有交易
-                for (int j=i-1;j>0;--j){
-                    StockTransactionInfoVo preRecord= (StockTransactionInfoVo) recordList.get(j);
+                for (int j=i-1;j>=0;--j){
+                    StockTransactionInfoVo preRecord= recordList.get(j);
                     calcCtx.buildPair(preRecord);
                     if (calcCtx.getCurrTradeNumber()<=0){
                         break;
                     }
                 }
-
                 calcCtx.finishRecord();
             }
         }
@@ -231,10 +231,64 @@ public class ParseExcelServiceImpl  extends AbstractParseExcelService implements
         BigDecimal feeStamp = new BigDecimal(0);
         Iterator iterator = recordList.iterator();
 
+        //统计所有的交易
         while(iterator.hasNext()){
             StockTransactionInfoVo currRecord = (StockTransactionInfoVo)iterator.next();
-//            currRecord.setPair(BillUtils.);
+            currRecord.setPair(BillUtils.makePairAttr(currRecord.getPairList(),currRecord.getStockNumber()));
+            lastPrice = currRecord.getPrice();
+            if (currRecord.getBuyOrSell().equals("买")){
+                stockNumber += currRecord.getStockNumber();
+            }else if(currRecord.getBuyOrSell().equals("卖")) {
+                stockNumber -= currRecord.getStockNumber();
+            }
+
+            if (currRecord.getDiffPrice() !=null){
+                diffAmount = diffAmount.add(new BigDecimal(currRecord.getDiffPrice()));
+            }
+
+            if (currRecord.getFeeService()!=null){
+                feeService = feeService.add(new BigDecimal(currRecord.getFeeService()));
+            }
+
+            if (currRecord.getFeeStamp()!= null){
+                feeStamp = feeStamp.add(new BigDecimal(currRecord.getFeeStamp()));
+            }
         }
+            stockInfo.setLastPrice(lastPrice);
+            if (stockNumber != 0){
+                stockInfo.setStockNumber(stockNumber);
+            }
+
+            double diffAmountD =diffAmount.setScale(2, RoundingMode.HALF_UP).doubleValue();
+
+            if (diffAmountD != 0.0D){
+                stockInfo.setDiffAmount(diffAmountD);
+            }
+
+            double feeServiceD = feeService.setScale(2,RoundingMode.HALF_UP).doubleValue();
+
+            if (feeServiceD !=0.0D){
+                stockInfo.setFeeService(feeServiceD);
+            }
+
+            double feeStampD = feeStamp.setScale(2,RoundingMode.HALF_UP).doubleValue();
+
+            if (feeStampD !=0.0D){
+                stockInfo.setFeeStamp(feeStampD);
+            }
 
     }
+
+    //单元测试
+//    public static void main(String[] args) {
+//        ParseExcelService ParseExcelService = new ParseExcelService();
+//        List<StockInfoBo> list = new ArrayList<>();
+//        File excelFile = new File("D:/股票交易记录.xlsx");
+//        try {
+//            list = ParseExcelServiceimpl.parseFile(excelFile);
+//        }catch (Exception ex){
+//            ex.printStackTrace();
+//        }
+//
+//    }
 }

@@ -1,7 +1,7 @@
 package com.foreign.exchange.gui;
 
 import com.foreign.exchange.pojo.Bo.StockInfoBo;
-import com.foreign.exchange.service.StockMonitorService;
+import com.foreign.exchange.service.stock.StockMonitorService;
 
 import javax.swing.table.AbstractTableModel;
 

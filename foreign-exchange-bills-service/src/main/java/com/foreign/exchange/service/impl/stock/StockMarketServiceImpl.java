@@ -1,7 +1,7 @@
-package com.foreign.exchange.service.impl;
+package com.foreign.exchange.service.impl.stock;
 
 import com.foreign.exchange.pojo.Vo.StockPriceVo;
-import com.foreign.exchange.service.StockMarketService;
+import com.foreign.exchange.service.stock.StockMarketService;
 import com.foreign.exchange.utils.HttpUtil;
 import org.springframework.stereotype.Service;
 
@@ -76,10 +76,10 @@ public class StockMarketServiceImpl implements StockMarketService {
     }
 
     //单元测试
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
 //        StockMarketServiceImpl stockMarketService = new StockMarketServiceImpl();
 //        StockPriceVo stockPriceVo = stockMarketService.getStockPrice("600036");
 //        System.out.println(stockPriceVo.toString());
 
-    }
+//    }
 }

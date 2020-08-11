@@ -1,11 +1,9 @@
-package com.foreign.exchange.service.impl;
+package com.foreign.exchange.service.stock;
 
 import com.foreign.exchange.enums.TradeConstant;
 import com.foreign.exchange.pojo.Bo.StockInfoBo;
 import com.foreign.exchange.pojo.Vo.StockPriceVo;
 import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
-import com.foreign.exchange.service.StockMonitorListener;
-import com.foreign.exchange.service.StockMonitorService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,7 +16,7 @@ import java.util.Map;
  * @author
  * @create 2020-07-31-14:02
  */
-public class StockMonitorServiceImpl  implements StockMonitorService {
+public class StockMonitorService  {
 
     private List<StockInfoBo> stockList = new ArrayList<>();
     private StockMonitorListener stockMonitorListener;

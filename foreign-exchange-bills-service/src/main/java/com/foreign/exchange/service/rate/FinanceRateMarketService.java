@@ -1,6 +1,5 @@
-package com.foreign.exchange.service;
+package com.foreign.exchange.service.rate;
 
-import com.foreign.exchange.pojo.FinanceRatePrice;
 import com.foreign.exchange.pojo.RmbQuote;
 
 /**

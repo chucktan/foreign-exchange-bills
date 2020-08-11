@@ -2,9 +2,7 @@ package com.foreign.exchange.gui;
 
 import com.foreign.exchange.enums.TradeConstant;
 import com.foreign.exchange.pojo.Bo.StockInfoBo;
-import com.foreign.exchange.service.StockMonitorService;
-import com.foreign.exchange.service.impl.StockMonitorServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.foreign.exchange.service.stock.StockMonitorService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

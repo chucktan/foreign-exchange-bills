@@ -3,7 +3,6 @@ package com.foreign.exchange.service;
 import com.foreign.exchange.pojo.Vo.StockPairInfoVo;
 import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
 import com.foreign.exchange.utils.OptionUtils;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,18 +39,18 @@ public class CalcStockContext {
     }
 
     /**
-     *
+     *计算过程为卖方-买方
      * @param preRecord
      */
     public void buildPair(StockTransactionInfoVo preRecord){
         if (this.currTradeNumber > 0){
-            //只计算买
+            //只选择买
             if (BillUtils.isOpenRecord(preRecord)){
                 if (preRecord.getStockNumber() > 0){
                     int preNotPairNumber = BillUtils.getNotPairNumber(preRecord);
                     if (preNotPairNumber > 0){
-                        //如果
                         int pairNumber = this.currTradeNumber <= preNotPairNumber?this.currTradeNumber:preNotPairNumber;
+                        //将交易pair添加进对应的transaction中
                         StockPairInfoVo pairInfo = new StockPairInfoVo();
                         pairInfo.setPairCode(this.pairIndex);
                         pairInfo.setPairNumber(pairNumber);
