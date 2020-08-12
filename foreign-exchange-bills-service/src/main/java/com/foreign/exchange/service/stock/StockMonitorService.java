@@ -4,6 +4,8 @@ import com.foreign.exchange.enums.TradeConstant;
 import com.foreign.exchange.pojo.Bo.StockInfoBo;
 import com.foreign.exchange.pojo.Vo.StockPriceVo;
 import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,6 +19,8 @@ import java.util.Map;
  * @create 2020-07-31-14:02
  */
 public class StockMonitorService  {
+
+    private Logger logger = LoggerFactory.getLogger(StockMonitorService.class);
 
     private List<StockInfoBo> stockList = new ArrayList<>();
     private StockMonitorListener stockMonitorListener;
@@ -76,10 +80,11 @@ public class StockMonitorService  {
                 do {
                     do {
                         if (!iterator.hasNext()){
+                            //如果最新价更新，前端渲染面板
                             if (haveUpdate){
                                 this.stockMonitorListener.fireTableDataChanged();
                             }
-
+                            //如果更新利润等信息，前端置顶
                             if (updateTradeFlag){
                                 this.stockMonitorListener.updateTradeFlag();
                             }
@@ -90,7 +95,7 @@ public class StockMonitorService  {
                         newPriceInfo = (StockPriceVo) priceMap.get(stockInfo.getStockCode());
                     }while (newPriceInfo ==null);
                 }while (newPriceInfo.getNowPrice() == null);
-                //如果股票记录的最新价与最新获取的价一样则不更新。
+                //如果股票记录的最新价与最新获取的价一样则不更新，否则更新股票当前利润等相关信息，并前端渲染面板，并置顶利润更新项
             }while (stockInfo.getNewestPrice() !=null && stockInfo.getNewestPrice() == newPriceInfo.getNowPrice());
 
             haveUpdate = true;
@@ -102,7 +107,7 @@ public class StockMonitorService  {
     }
 
     /**
-     * 根据获取最新的股票价格，更新单只股票最新价，涨跌幅度，建议交易方向，建议交易价格，市场方向
+     * 根据获取最新的股票价格，更新单只股票最新价，交易涨跌幅度，建议交易方向，建议交易价格，市场涨跌幅
      * @param stockInfo
      * @param newPriceInfo
      * @return
@@ -113,12 +118,12 @@ public class StockMonitorService  {
         //含有未计算的交易对
         if (!stockInfo.getTransactionList().isEmpty()){
             //获取最后一笔交易
-            lastTrans = (StockTransactionInfoVo) stockInfo.getTransactionList().get(stockInfo.getTransactionList().size() -1);
+            lastTrans =  stockInfo.getTransactionList().get(stockInfo.getTransactionList().size() -1);
         }
 
-        //最近价格
+        //最新价格
         double newPrice = newPriceInfo.getNowPrice();
-        //收盘价
+        //最后交易价格
         double preClosePrice;
         if(lastTrans != null && lastTrans.getPrice() !=null){
             preClosePrice = lastTrans.getPrice();
@@ -128,21 +133,22 @@ public class StockMonitorService  {
             double highPrice = (double)((int)(preClosePrice*10500.0D))/10000.0D;
             //%涨跌幅
             double rate = (newPrice-preClosePrice)*10000.0D/preClosePrice/100.0D;
-            stockInfo.setRiseOrDrop(rate);
+            stockInfo.setRiseOrDrop(rate);//设置最后涨跌幅
             if (stockInfo.getTradeFlag() == null){
                 stockInfo.setTradeFlag(TradeConstant.TRADE_FLAG_INIT.type);
-                stockInfo.setTradeFlagPrice(newPrice);
+                stockInfo.setTradeFlagPrice(newPrice);//初始化为最新价格
+//                updateTradeFlag = true;
             }else{
                 double fp = stockInfo.getTradeFlagPrice();
                 //根据最新价格与最低价、最高价的比较，拟定建议新的交易方向
                 //最新价低于最近价
                 if (newPrice < lowPrice){
-                    //且最新价低于上次交易价，建议买
+                    //且最新价低于上次交易价（1%变更），建议买
                     if (newPrice *100.0D /fp < 99.0D){
                         this.generateTradeFlag(stockInfo,TradeConstant.TRADE_FLAG_BUY.type,newPrice);
                         updateTradeFlag = true;
                     }
-                    //最新价高于最高价，且最新价高于上次交易价，建议卖
+                    //最新价高于最高价，且最新价高于上次交易价（1%变更），建议卖
                 }else if (newPrice > highPrice && newPrice *100.0D /fp >101.0D){
                         this.generateTradeFlag(stockInfo,TradeConstant.TRADE_FLAG_SELL.type,newPrice);
                         updateTradeFlag = true;
@@ -162,7 +168,7 @@ public class StockMonitorService  {
             stockInfo.setNewestUpOrDown(ratePrice);
 
         }
-        return  false;
+        return  updateTradeFlag;
 
 
     }
@@ -181,7 +187,7 @@ public class StockMonitorService  {
         sb.append(msg).append(stockInfo.getStockName());
         sb.append("(").append(stockInfo.getStockCode()).append(")");
         sb.append("，最新价：").append(price);
-        System.out.println(sb.toString());
+        this.logger.debug(sb.toString());
     }
 
 }

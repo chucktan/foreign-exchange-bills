@@ -256,24 +256,28 @@ public class StockParseExcelService extends AbstractParseExcelService {
         }
             stockInfo.setLastPrice(lastPrice);
             if (stockNumber != 0){
+                //设置持仓量
                 stockInfo.setStockNumber(stockNumber);
             }
 
             double diffAmountD =diffAmount.setScale(2, RoundingMode.HALF_UP).doubleValue();
 
             if (diffAmountD != 0.0D){
+                //设置差额
                 stockInfo.setDiffAmount(diffAmountD);
             }
 
             double feeServiceD = feeService.setScale(2,RoundingMode.HALF_UP).doubleValue();
 
             if (feeServiceD !=0.0D){
+                //设置手续费
                 stockInfo.setFeeService(feeServiceD);
             }
 
             double feeStampD = feeStamp.setScale(2,RoundingMode.HALF_UP).doubleValue();
 
             if (feeStampD !=0.0D){
+                //设置印花税
                 stockInfo.setFeeStamp(feeStampD);
             }
 

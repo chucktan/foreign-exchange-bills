@@ -62,6 +62,7 @@ public class GUIMain {
         this.initFileChooser();
         this.stockTransactionDialog = new StockTransactionDialog();
         this.stockTransactionDialog.init(this.rootFrame);
+        this.listenStockTradeFlag();
         this.rootFrame.setUndecorated(false);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -110,17 +111,17 @@ public class GUIMain {
         stockNameColumn.setCellRenderer(cellRenderer);
         tableColumnModel.addColumn(stockNameColumn);
         TableColumn stockCodeColumn = new TableColumn(1);
-        stockNameColumn.setHeaderValue("代码");
-        stockNameColumn.setCellRenderer(cellRenderer);
+        stockCodeColumn.setHeaderValue("代码");
+        stockCodeColumn.setCellRenderer(cellRenderer);
         tableColumnModel.addColumn(stockCodeColumn);
         TableColumn stockNewestPriceColumn = new TableColumn(2);
-        stockNameColumn.setHeaderValue("最新价");
-        stockNameColumn.setCellRenderer(cellRenderer);
+        stockNewestPriceColumn.setHeaderValue("最新价");
+        stockNewestPriceColumn.setCellRenderer(cellRenderer);
         tableColumnModel.addColumn(stockNewestPriceColumn);
-        TableColumn StocknewestUpOrDownColumn = new TableColumn(3);
-        stockNameColumn.setHeaderValue("涨跌幅");
-        stockNameColumn.setCellRenderer(cellRenderer);
-        tableColumnModel.addColumn(StocknewestUpOrDownColumn);
+        TableColumn StockNewestUpOrDownColumn = new TableColumn(3);
+        StockNewestUpOrDownColumn.setHeaderValue("涨跌幅");
+        StockNewestUpOrDownColumn.setCellRenderer(cellRenderer);
+        tableColumnModel.addColumn(StockNewestUpOrDownColumn);
         TableColumn lastPriceColumn = new TableColumn(4);
         lastPriceColumn.setHeaderValue("最后成交");
         lastPriceColumn.setCellRenderer(cellRenderer);
@@ -151,10 +152,11 @@ public class GUIMain {
         tableColumnModel.addColumn(remarkColumn);
 
         this.stockTable = new JTable(this.stockTableModel,tableColumnModel);
-        this.stockTable.setSelectionMode(0);
+        this.stockTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);//只能选择一项
         this.stockTable.setRowSorter(new TableRowSorter<>(this.stockTableModel));
-        cellRenderer.setStockMonitorService(this.stockMonitorService);
         cellRenderer.setStockTable(this.stockTable);
+        cellRenderer.setStockMonitorService(this.stockMonitorService);
+
 
         this.stockTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -193,9 +195,11 @@ public class GUIMain {
 
     private  void listenStockTradeFlag(){
         this.stockMonitorService.setStockMonitorListener(new StockMonitorListener() {
+            //更新后，渲染中间面板
             @Override
             public void fireTableDataChanged() {
                 int selectedRowIndex = GUIMain.this.stockTable.getSelectedRow();
+//                int selectedRowIndex = 0;
                 int stockIndex = -1;
                 StockInfoBo stockInfo =null;
                 if (selectedRowIndex >=0){
@@ -214,6 +218,7 @@ public class GUIMain {
                 }
             }
 
+            //置顶更新
             @Override
             public void updateTradeFlag() {
                 GUIMain.this.rootFrame.toFront();//窗口置顶
@@ -233,12 +238,14 @@ public class GUIMain {
             try {
                 //处理excel导入,更新交易信息，计算交易对，交易利润
                 List<StockInfoBo> stockList = this.stockParseExcelService.parseFile(excelFile);
+                //添加stockList到stockMonitorService，并更新前端界面
                 this.stockMonitorService.setStockList(stockList);
                 //更新股票价格
-                this.stockUpdateService.startUpdateEveryTime();
+                this.stockUpdateService.notifyUpdateThread();
             }catch (Exception ex){
                 this.logger.error("解析excel出错",ex);
             }
+
         }
     }
 

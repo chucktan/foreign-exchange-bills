@@ -25,10 +25,6 @@ public class StockUpdateService {
     private  StockMarketService stockMarketService;
 
 
-    public StockMonitorService getStockMonitorService() {
-        return stockMonitorService;
-    }
-
     public void setStockMarketService(StockMarketService stockMarketService) {
         this.stockMarketService = stockMarketService;
     }
@@ -99,7 +95,10 @@ public class StockUpdateService {
                 });
             }
 
+        }else{
+            this.logger.debug("没有股票");
         }
+        this.logger.debug("结束更新股票");
     }
 
     public  void notifyUpdateThread(){

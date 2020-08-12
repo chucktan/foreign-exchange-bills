@@ -3,6 +3,8 @@ package com.foreign.exchange.service;
 import com.foreign.exchange.pojo.Vo.StockPairInfoVo;
 import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
 import com.foreign.exchange.utils.OptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,6 +16,8 @@ import java.util.List;
  * @create 2020-08-06-16:32
  */
 public class CalcStockContext {
+
+    private Logger logger = LoggerFactory.getLogger(CalcStockContext.class);
 
     private int pairIndex = 1;
     private List<StockPairInfoVo> pairList = new ArrayList<>();
@@ -64,6 +68,9 @@ public class CalcStockContext {
                         double currDiffAmount = this.currRecord.getDiffPrice()==null?0.0D:this.currRecord.getDiffPrice();
                         this.currRecord.setDiffPrice(OptionUtils.add(addDiff,currDiffAmount));
                         this.currTradeNumber -=pairNumber;
+
+                        this.logger.debug("pairList:"+pairInfo.getPairCode()+"--"+pairInfo.getPairNumber());
+
                     }
                 }
             }

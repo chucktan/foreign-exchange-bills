@@ -16,15 +16,15 @@ public class StockInfoBo {
     private String stockCode;//股票代码
     private String remark;//备注
     private Double newestPrice;//最新价
-    private Double newestUpOrDown;//最新市场方向（涨/跌）
+    private Double newestUpOrDown;//市场涨跌幅（涨/跌,通过最新价/昨日收盘价计算）
     private Double lastPrice;//上次价格
-    private Double riseOrDrop;//涨/跌(%,通过最新价/收盘价计算)
+    private Double riseOrDrop;//最后涨跌幅，(涨/跌%,通过最新价/最后一笔交易价格计算)
     private Integer stockNumber;//股票数量
     private Double diffAmount;//差值
     private Double feeService;//佣金
     private Double feeStamp;//印花税
     private Integer tradeFlag;//交易方向（1买/2卖/0无方向）
-    private Double tradeFlagPrice;//交易价格
+    private Double tradeFlagPrice;//交易价格(设置为最新获取价)
 
     //存储所有的交易信息，用于计算盈亏和持仓，使用完即剔除
     private List<StockTransactionInfoVo> transactionList = new ArrayList();

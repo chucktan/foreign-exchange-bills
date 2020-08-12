@@ -3,6 +3,8 @@ package com.foreign.exchange.service.impl.stock;
 import com.foreign.exchange.pojo.Vo.StockPriceVo;
 import com.foreign.exchange.service.stock.StockMarketService;
 import com.foreign.exchange.utils.HttpUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class StockMarketServiceImpl implements StockMarketService {
+
+    private Logger logger = LoggerFactory.getLogger(StockMarketServiceImpl.class);
 
     private  static  final  String STOCK_URL_PREFIX = "http://hq.sinajs.cn/list=";
     @Override
@@ -38,7 +42,7 @@ public class StockMarketServiceImpl implements StockMarketService {
                             return  null;
                         }else {
                             StockPriceVo priceInfo = new StockPriceVo();
-                            //priceInfo.setCode(stockCode);
+                            priceInfo.setCode(stockCode);
                             priceInfo.setPreClosePrice(Double.valueOf(infoParts[2]));
                             priceInfo.setNowPrice(Double.valueOf(infoParts[3]));
                             priceInfo.setHighPrice(Double.valueOf(infoParts[4]));
@@ -46,7 +50,12 @@ public class StockMarketServiceImpl implements StockMarketService {
                             priceInfo.setPriceDate(infoParts[30]);
                             priceInfo.setPriceTime(infoParts[31]);
                             priceInfo.setUpdateTime(System.currentTimeMillis());
+
+                            this.logger.debug("priceInfo:"+stockCode+"--"+priceInfo.getNowPrice());
+
                             return  priceInfo;
+
+
                         }
 
                     }
