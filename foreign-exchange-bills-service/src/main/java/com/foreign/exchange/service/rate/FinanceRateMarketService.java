@@ -1,6 +1,7 @@
 package com.foreign.exchange.service.rate;
 
 import com.foreign.exchange.pojo.RmbQuote;
+import com.foreign.exchange.pojo.Vo.RmbQuoteVo;
 
 /**
  * @author
@@ -12,5 +13,5 @@ public interface FinanceRateMarketService {
      * 获取最新的汇率价格
      * @param rateCode
      */
-    public RmbQuote getPrice(String rateCode);
+    public RmbQuoteVo getPrice(String rateCode);
 }

@@ -1,10 +1,10 @@
 package com.foreign.exchange.service.stock;
 
 import com.foreign.exchange.pojo.Bo.StockInfoBo;
-import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
+import com.foreign.exchange.pojo.Vo.TransactionInfoVo;
 import com.foreign.exchange.service.AbstractParseExcelService;
 import com.foreign.exchange.service.BillUtils;
-import com.foreign.exchange.service.CalcStockContext;
+import com.foreign.exchange.service.CalcContext;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -48,7 +48,7 @@ public class StockParseExcelService extends AbstractParseExcelService {
                 this.logger.debug(stockInfo.getStockName()+"--"+stockInfo.getStockCode()+"--"+stockInfo.getRemark());
             }
 
-            List<StockTransactionInfoVo> transactionList = new ArrayList<>();
+            List<TransactionInfoVo> transactionList = new ArrayList<>();
             //加载次页后的交易信息
             this.loadTransactionSheet(wb,stockList,transactionList);
             //计算交易信息，构建交易对
@@ -98,7 +98,7 @@ public class StockParseExcelService extends AbstractParseExcelService {
      * @param stockList 从首页获取的股票列表
      * @param transactionInfoList
      */
-     private  void loadTransactionSheet(XSSFWorkbook wb, List<StockInfoBo> stockList, List<StockTransactionInfoVo> transactionInfoList){
+     private  void loadTransactionSheet(XSSFWorkbook wb, List<StockInfoBo> stockList, List<TransactionInfoVo> transactionInfoList){
          Map<String,StockInfoBo> stockMap = new HashMap<>();
          Iterator iterator = stockList.iterator();
 
@@ -130,24 +130,24 @@ public class StockParseExcelService extends AbstractParseExcelService {
                         break;
                     }
 
-                    StockTransactionInfoVo transactionInfo = new StockTransactionInfoVo();
+                    TransactionInfoVo transactionInfo = new TransactionInfoVo();
                     transactionInfo.setDate(date);
-                    transactionInfo.setStockName(this.getStringValue(row.getCell(1)));
-                    transactionInfo.setStockCode(this.getStringValue(row.getCell(2)));
+                    transactionInfo.setName(this.getStringValue(row.getCell(1)));
+                    transactionInfo.setCode(this.getStringValue(row.getCell(2)));
                     transactionInfo.setBuyOrSell(this.getStringValue(row.getCell(3)));
-                    transactionInfo.setStockNumber(this.getIntValue(row.getCell(4)));
+                    transactionInfo.setTransNumber(this.getIntValue(row.getCell(4)));
                     transactionInfo.setPrice(this.getNumericValue(row.getCell(5)));
                     transactionInfo.setFeeService(this.getNumericValue(row.getCell(6)));
                     transactionInfo.setFeeStamp(this.getNumericValue(row.getCell(7)));
                     transactionInfo.setRemark(this.getStringValue(row.getCell(8)));
 
                     transactionInfoList.add(transactionInfo);
-                    StockInfoBo stockInfo= (StockInfoBo) stockMap.get(transactionInfo.getStockCode());
+                    StockInfoBo stockInfo= (StockInfoBo) stockMap.get(transactionInfo.getCode());
                     if (stockInfo != null){
                         stockInfo.getTransactionList().add(transactionInfo);
                     }
 
-                    this.logger.debug("load transaction: "+transactionInfo.getStockName()+"--"+ transactionInfo.getPrice());
+                    this.logger.debug("load transaction: "+transactionInfo.getName()+"--"+ transactionInfo.getPrice());
 
                 }
             }
@@ -192,7 +192,7 @@ public class StockParseExcelService extends AbstractParseExcelService {
 
         while (iterator.hasNext()){
             StockInfoBo stockInfo = (StockInfoBo) iterator.next();
-            List<StockTransactionInfoVo> transactionList = stockInfo.getTransactionList();
+            List<TransactionInfoVo> transactionList = stockInfo.getTransactionList();
             if (transactionList.size() > 0){
                 this.calcOneStock(stockInfo);
             }
@@ -204,18 +204,18 @@ public class StockParseExcelService extends AbstractParseExcelService {
      * @param stockInfo
      */
     private void calcOneStock(StockInfoBo stockInfo){
-        List<StockTransactionInfoVo> recordList = stockInfo.getTransactionList();
+        List<TransactionInfoVo> recordList = stockInfo.getTransactionList();
         BillUtils.clearRecordPair(recordList);
-        CalcStockContext calcCtx = new CalcStockContext();
+        CalcContext calcCtx = new CalcContext();
 
         for (int i=0;i<recordList.size();++i){
-            StockTransactionInfoVo currRecord = recordList.get(i);
+            TransactionInfoVo currRecord = recordList.get(i);
             //卖
             if (BillUtils.isCloseRecord(currRecord)){
                 calcCtx.initRecord(currRecord);
                 //遍历该交易以前的所有交易
                 for (int j=i-1;j>=0;--j){
-                    StockTransactionInfoVo preRecord= recordList.get(j);
+                    TransactionInfoVo preRecord= recordList.get(j);
                     calcCtx.buildPair(preRecord);
                     if (calcCtx.getCurrTradeNumber()<=0){
                         break;
@@ -233,13 +233,13 @@ public class StockParseExcelService extends AbstractParseExcelService {
 
         //统计所有的交易
         while(iterator.hasNext()){
-            StockTransactionInfoVo currRecord = (StockTransactionInfoVo)iterator.next();
-            currRecord.setPair(BillUtils.makePairAttr(currRecord.getPairList(),currRecord.getStockNumber()));
+            TransactionInfoVo currRecord = (TransactionInfoVo)iterator.next();
+            currRecord.setPair(BillUtils.makePairAttr(currRecord.getPairList(),currRecord.getTransNumber()));
             lastPrice = currRecord.getPrice();
             if (currRecord.getBuyOrSell().equals("买")){
-                stockNumber += currRecord.getStockNumber();
+                stockNumber += currRecord.getTransNumber();
             }else if(currRecord.getBuyOrSell().equals("卖")) {
-                stockNumber -= currRecord.getStockNumber();
+                stockNumber -= currRecord.getTransNumber();
             }
 
             if (currRecord.getDiffPrice() !=null){

@@ -1,6 +1,6 @@
 package com.foreign.exchange.service.impl.rate;
 
-import com.foreign.exchange.pojo.RmbQuote;
+import com.foreign.exchange.pojo.Vo.RmbQuoteVo;
 import com.foreign.exchange.service.rate.FinanceRateMarketService;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -28,9 +28,10 @@ public class FinanceRateMarketServiceImpl implements FinanceRateMarketService {
     public  static  final  String RATE_URL_PREFIX = "https://srh.bankofchina.com/search/whpj/searchen.jsp";
 
     @Override
-    public RmbQuote getPrice(String rateCode) {
+    public RmbQuoteVo getPrice(String rateCode) {
 
-        return  (RmbQuote) getExchangeRate(rateCode,"").get(0);
+        //获取最新的一笔记录
+        return  (RmbQuoteVo) getExchangeRate(rateCode,"").get(0);
     }
 
     /**
@@ -104,23 +105,23 @@ public class FinanceRateMarketServiceImpl implements FinanceRateMarketService {
             }
 
         }
-        List<RmbQuote> list = new ArrayList();
+        List<RmbQuoteVo> list = new ArrayList();
         //如果找到汇率列表信息
         if (tableIndex > -1){
             Element table = tables.get(tableIndex);
             //遍历该表格内的所有<tr></tr>
             Elements trs = table.select("tr");
             for (int i=1;i<trs.size();++i){
-                RmbQuote rmbQuote = new RmbQuote();
+                RmbQuoteVo rmbQuote = new RmbQuoteVo();
                 Element tr = trs.get(i);
                 //将数据放入实体对象中
                 Elements tds = tr.select("td");
                 rmbQuote.setCurrencyCode(tds.get(0).text());
-                rmbQuote.setFbuyPrice(new BigDecimal(tds.get(1).text()));
-                rmbQuote.setMbuyPrice(new BigDecimal(tds.get(2).text()));
-                rmbQuote.setFsellPrice(new BigDecimal(tds.get(3).text()));
-                rmbQuote.setMsellPrice(new BigDecimal(tds.get(4).text()));
-                rmbQuote.setBankConversionPrice(new BigDecimal(tds.get(5).text()));
+                rmbQuote.setFbuyPrice(new BigDecimal(tds.get(1).text()).doubleValue()/100.0D);
+                rmbQuote.setMbuyPrice(new BigDecimal(tds.get(2).text()).doubleValue()/100.0D);
+                rmbQuote.setFsellPrice(new BigDecimal(tds.get(3).text()).doubleValue()/100.0D);
+                rmbQuote.setMsellPrice(new BigDecimal(tds.get(4).text()).doubleValue()/100.0D);
+                rmbQuote.setBankConversionPrice(new BigDecimal(tds.get(5).text()).doubleValue()/100.0D);
                 rmbQuote.setCreatedTime(tds.get(6).text());
                 list.add(rmbQuote);
             }

@@ -1,7 +1,6 @@
 package com.foreign.exchange.pojo.Bo;
 
-import com.foreign.exchange.pojo.TransactionInfo;
-import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
+import com.foreign.exchange.pojo.Vo.TransactionInfoVo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +22,12 @@ public class StockInfoBo {
     private Double diffAmount;//差值
     private Double feeService;//佣金
     private Double feeStamp;//印花税
+
     private Integer tradeFlag;//交易方向（1买/2卖/0无方向）
     private Double tradeFlagPrice;//交易价格(设置为最新获取价)
 
     //存储所有的交易信息，用于计算盈亏和持仓，使用完即剔除
-    private List<StockTransactionInfoVo> transactionList = new ArrayList();
+    private List<TransactionInfoVo> transactionList = new ArrayList();
 
     public String getStockName() {
         return this.stockName;
@@ -133,11 +133,11 @@ public class StockInfoBo {
         this.tradeFlagPrice = tradeFlagPrice;
     }
 
-    public List<StockTransactionInfoVo> getTransactionList() {
+    public List<TransactionInfoVo> getTransactionList() {
         return transactionList;
     }
 
-    public void setTransactionList(List<StockTransactionInfoVo> transactionList) {
+    public void setTransactionList(List<TransactionInfoVo> transactionList) {
         this.transactionList = transactionList;
     }
 }

@@ -3,7 +3,7 @@ package com.foreign.exchange.service.stock;
 import com.foreign.exchange.enums.TradeConstant;
 import com.foreign.exchange.pojo.Bo.StockInfoBo;
 import com.foreign.exchange.pojo.Vo.StockPriceVo;
-import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
+import com.foreign.exchange.pojo.Vo.TransactionInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,7 +114,7 @@ public class StockMonitorService  {
      */
     private  boolean updateOneStock(StockInfoBo stockInfo, StockPriceVo newPriceInfo){
         boolean updateTradeFlag = false;
-        StockTransactionInfoVo lastTrans = null;
+        TransactionInfoVo lastTrans = null;
         //含有未计算的交易对
         if (!stockInfo.getTransactionList().isEmpty()){
             //获取最后一笔交易
@@ -132,7 +132,8 @@ public class StockMonitorService  {
             //最高价：收盘价105%
             double highPrice = (double)((int)(preClosePrice*10500.0D))/10000.0D;
             //%涨跌幅
-            double rate = (newPrice-preClosePrice)*10000.0D/preClosePrice/100.0D;
+            BigDecimal difPrice = new BigDecimal((newPrice-preClosePrice)*100.0D);
+            double rate = difPrice.divide(new BigDecimal(preClosePrice),2,RoundingMode.HALF_UP).doubleValue();
             stockInfo.setRiseOrDrop(rate);//设置最后涨跌幅
             if (stockInfo.getTradeFlag() == null){
                 stockInfo.setTradeFlag(TradeConstant.TRADE_FLAG_INIT.type);

@@ -3,7 +3,6 @@ com\foreign\exchange\service\stock\CheckExcelBillService.class
 com\foreign\exchange\service\stock\StockParseExcelService.class
 com\foreign\exchange\service\AbstractParseExcelService.class
 com\foreign\exchange\service\stock\StockMonitorService.class
-com\foreign\exchange\service\CalcStockContext.class
 com\foreign\exchange\service\stock\StockUpdateService$1.class
 com\foreign\exchange\service\stock\StockUpdateService.class
 com\foreign\exchange\service\stock\StockUpdateService$2.class

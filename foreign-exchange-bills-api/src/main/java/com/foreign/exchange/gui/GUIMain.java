@@ -1,9 +1,16 @@
 package com.foreign.exchange.gui;
 
+import com.foreign.exchange.gui.stock.StockTableCellRenderer;
+import com.foreign.exchange.gui.stock.StockTableModel;
+import com.foreign.exchange.gui.stock.StockTransactionDialog;
+import com.foreign.exchange.pojo.Bo.RateInfoBo;
 import com.foreign.exchange.pojo.Bo.StockInfoBo;
+import com.foreign.exchange.service.rate.RateMonitorService;
+import com.foreign.exchange.service.rate.RateParseExcelService;
+import com.foreign.exchange.service.rate.RateUpdateService;
 import com.foreign.exchange.service.stock.StockMonitorListener;
-import com.foreign.exchange.service.stock.StockParseExcelService;
 import com.foreign.exchange.service.stock.StockMonitorService;
+import com.foreign.exchange.service.stock.StockParseExcelService;
 import com.foreign.exchange.service.stock.StockUpdateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +41,13 @@ public class GUIMain {
     private StockParseExcelService stockParseExcelService;
     //更新股票价格
     private StockUpdateService stockUpdateService;
+
+    //根据最新的外汇价格更新股票相关信息
+    private RateMonitorService rateMonitorService;
+    //处理Excel文件导入,更新交易信息，计算交易对和交易利润
+    private RateParseExcelService rateParseExcelService;
+    //更新股票价格
+    private RateUpdateService rateUpdateService;
 
     private JFrame rootFrame;
     private JFileChooser fileChooser;
@@ -81,21 +95,30 @@ public class GUIMain {
      */
     private  void createNorthPanel(JFrame frame){
         JPanel northPanel = new JPanel();
-        northPanel.setSize(300,500);
+        northPanel.setSize(300,50);
         northPanel.setBackground(Color.green);
         FlowLayout layout = new FlowLayout();
         layout.setAlignment(0);
         northPanel.setLayout(layout);
         frame.add(northPanel,"North");
-        JButton loadExcelButton = new JButton("加载Excel");
-        loadExcelButton.addActionListener(new ActionListener() {
+        JButton loadStockExcelButton = new JButton("加载股票Excel");
+        loadStockExcelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUIMain.this.handleLoadExcelButtonClick();
+                GUIMain.this.handleLoadStockExcelButtonClick();
             }
         });
 
-        northPanel.add(loadExcelButton);
+        JButton loadRateExcelButton = new JButton("加载外汇Excel");
+        loadRateExcelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GUIMain.this.handleLoadRateExcelButtonClick();
+            }
+        });
+
+        northPanel.add(loadStockExcelButton);
+        northPanel.add(loadRateExcelButton);
     }
 
     /**
@@ -119,7 +142,7 @@ public class GUIMain {
         stockNewestPriceColumn.setCellRenderer(cellRenderer);
         tableColumnModel.addColumn(stockNewestPriceColumn);
         TableColumn StockNewestUpOrDownColumn = new TableColumn(3);
-        StockNewestUpOrDownColumn.setHeaderValue("涨跌幅");
+        StockNewestUpOrDownColumn.setHeaderValue("涨跌幅(%)");
         StockNewestUpOrDownColumn.setCellRenderer(cellRenderer);
         tableColumnModel.addColumn(StockNewestUpOrDownColumn);
         TableColumn lastPriceColumn = new TableColumn(4);
@@ -127,7 +150,7 @@ public class GUIMain {
         lastPriceColumn.setCellRenderer(cellRenderer);
         tableColumnModel.addColumn(lastPriceColumn);
         TableColumn riseOrDropColumn = new TableColumn(5);
-        riseOrDropColumn.setHeaderValue("最后涨跌幅");
+        riseOrDropColumn.setHeaderValue("最后涨跌幅(%)");
         riseOrDropColumn.setCellRenderer(cellRenderer);
         tableColumnModel.addColumn(riseOrDropColumn);
         TableColumn stockNumberColumn = new TableColumn(6);
@@ -229,7 +252,7 @@ public class GUIMain {
     /**
      * 处理excel导入,更新交易信息，计算交易对，交易利润，更新股票价格
      */
-    private  void handleLoadExcelButtonClick(){
+    private  void handleLoadStockExcelButtonClick(){
         Font font = this.fileChooser.getFont();
         int returnVal = this.fileChooser.showOpenDialog(this.rootFrame);
         if (returnVal == 0){
@@ -242,6 +265,29 @@ public class GUIMain {
                 this.stockMonitorService.setStockList(stockList);
                 //更新股票价格
                 this.stockUpdateService.notifyUpdateThread();
+            }catch (Exception ex){
+                this.logger.error("解析excel出错",ex);
+            }
+
+        }
+    }
+
+    /**
+     * 处理excel导入,更新交易信息，计算交易对，交易利润，更新价格
+     */
+    private  void handleLoadRateExcelButtonClick(){
+        Font font = this.fileChooser.getFont();
+        int returnVal = this.fileChooser.showOpenDialog(this.rootFrame);
+        if (returnVal == 0){
+            File excelFile = this.fileChooser.getSelectedFile();
+
+            try {
+                //处理excel导入,更新交易信息，计算交易对，交易利润
+                List<RateInfoBo> rateList = this.rateParseExcelService.parseFile(excelFile);
+                //添加rateList到rateMonitorService，并更新前端界面
+                this.rateMonitorService.setRateList(rateList);
+                //更新外汇价格
+                this.rateUpdateService.notifyUpdateThread();
             }catch (Exception ex){
                 this.logger.error("解析excel出错",ex);
             }

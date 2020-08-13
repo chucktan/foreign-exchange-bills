@@ -1,7 +1,7 @@
 package com.foreign.exchange.service;
 
-import com.foreign.exchange.pojo.Vo.StockPairInfoVo;
-import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
+import com.foreign.exchange.pojo.Vo.PairInfoVo;
+import com.foreign.exchange.pojo.Vo.TransactionInfoVo;
 
 import java.util.Iterator;
 import java.util.List;
@@ -16,10 +16,10 @@ public class BillUtils {
      * 清空交易列表中（transactionlist）的交易对（pair）
      * @param recordList
      */
-    public static void clearRecordPair(List<StockTransactionInfoVo> recordList){
-        StockTransactionInfoVo record;
+    public static void clearRecordPair(List<TransactionInfoVo> recordList){
+        TransactionInfoVo record;
         for (Iterator iterator = recordList.iterator(); iterator.hasNext();record.setDiffPrice((Double)null)){
-            record = (StockTransactionInfoVo) iterator.next();
+            record = (TransactionInfoVo) iterator.next();
             if (record.getPairList() != null){
                 record.getPairList().clear();
             }
@@ -32,7 +32,7 @@ public class BillUtils {
      * @param transactionInfo
      * @return
      */
-    public  static  boolean isCloseRecord(StockTransactionInfoVo transactionInfo)
+    public  static  boolean isCloseRecord(TransactionInfoVo transactionInfo)
     {
         return "卖".equals(transactionInfo.getBuyOrSell());
     }
@@ -42,7 +42,7 @@ public class BillUtils {
      * @param transactionInfo
      * @return
      */
-    public  static  boolean isOpenRecord(StockTransactionInfoVo transactionInfo){
+    public  static  boolean isOpenRecord(TransactionInfoVo transactionInfo){
         return "买".equals(transactionInfo.getBuyOrSell());
     }
 
@@ -51,16 +51,16 @@ public class BillUtils {
      * @param record
      * @return
      */
-    public  static  int getNotPairNumber(StockTransactionInfoVo record){
+    public  static  int getNotPairNumber(TransactionInfoVo record){
         int totalPairNumber = 0;
-        StockPairInfoVo pair;
+        PairInfoVo pair;
         if (record.getPairList() !=null ){
             for (Iterator iterator = record.getPairList().iterator();iterator.hasNext();totalPairNumber+=pair.getPairNumber()){
-                pair = (StockPairInfoVo) iterator.next();
+                pair = (PairInfoVo) iterator.next();
             }
         }
         //剩余可交易额度=交易数量-已交易数量
-        return  record.getStockNumber() - totalPairNumber;
+        return  record.getTransNumber() - totalPairNumber;
 
     }
 
@@ -70,12 +70,12 @@ public class BillUtils {
      * @param tradeNumber
      * @return
      */
-    public  static  String makePairAttr(List<StockPairInfoVo> pairList,int tradeNumber){
+    public  static  String makePairAttr(List<PairInfoVo> pairList, int tradeNumber){
         if (pairList !=null && !pairList.isEmpty()){
             StringBuffer sb = new StringBuffer();
 
             for (int i=0;i<pairList.size();i++){
-                StockPairInfoVo pair = pairList.get(i);
+                PairInfoVo pair = pairList.get(i);
                 if (pair.getPairNumber() == tradeNumber){
                     sb.append(pair.getPairCode());
                 }else{

@@ -1,8 +1,7 @@
 package com.foreign.exchange.service.stock;
 
-import com.foreign.exchange.pojo.TransactionInfo;
-import com.foreign.exchange.pojo.Vo.StockPairInfoVo;
-import com.foreign.exchange.pojo.Vo.StockTransactionInfoVo;
+import com.foreign.exchange.pojo.Vo.PairInfoVo;
+import com.foreign.exchange.pojo.Vo.TransactionInfoVo;
 import com.foreign.exchange.service.AbstractParseExcelService;
 import com.foreign.exchange.utils.OptionUtils;
 import org.apache.commons.io.IOUtils;
@@ -36,7 +35,7 @@ public class CheckExcelBillService extends AbstractParseExcelService {
         try {
             input = new FileInputStream(excelFile);
             XSSFWorkbook wb = new XSSFWorkbook(input);
-            List<StockTransactionInfoVo> transactionList = new ArrayList<>();
+            List<TransactionInfoVo> transactionList = new ArrayList<>();
             this.loadTransactionSheet(wb,transactionList);
         }catch (IOException ex){
             throw  new RuntimeException(ex);
@@ -51,7 +50,7 @@ public class CheckExcelBillService extends AbstractParseExcelService {
      * @param wb
      * @param transactionList
      */
-    private void loadTransactionSheet(XSSFWorkbook wb,List<StockTransactionInfoVo> transactionList){
+    private void loadTransactionSheet(XSSFWorkbook wb,List<TransactionInfoVo> transactionList){
         int sheetNumber = wb.getNumberOfSheets();
 
         //遍历
@@ -73,12 +72,12 @@ public class CheckExcelBillService extends AbstractParseExcelService {
                         break;
                     }
 
-                    StockTransactionInfoVo info = new StockTransactionInfoVo();
+                    TransactionInfoVo info = new TransactionInfoVo();
                     info.setDate(date);
-                    info.setStockName(this.getStringValue(row.getCell(1)));
-                    info.setStockCode(this.getStringValue(row.getCell(2)));
+                    info.setName(this.getStringValue(row.getCell(1)));
+                    info.setCode(this.getStringValue(row.getCell(2)));
                     info.setBuyOrSell(this.getStringValue(row.getCell(3)));
-                    info.setStockNumber(this.getIntValue(row.getCell(4)));
+                    info.setTransNumber(this.getIntValue(row.getCell(4)));
                     info.setPrice(this.getNumericValue(row.getCell(5)));
                     info.setPair(this.getStringValue(row.getCell(6)));
                     info.setDiffPrice(this.getNumericValue(row.getCell(7)));
@@ -95,21 +94,21 @@ public class CheckExcelBillService extends AbstractParseExcelService {
      * 校验交易信息
      * @param list
      */
-    private void checkTransactionInfo(List<StockTransactionInfoVo> list){
-        Map<Integer,List<StockPairInfoVo>> pairMap = new HashMap<>();
+    private void checkTransactionInfo(List<TransactionInfoVo> list){
+        Map<Integer,List<PairInfoVo>> pairMap = new HashMap<>();
         Iterator transactionIterator = list.iterator();
         Iterator pairIterator;
 
         while (transactionIterator.hasNext()){
-            StockTransactionInfoVo transactionInfo = (StockTransactionInfoVo) transactionIterator.next();
+            TransactionInfoVo transactionInfo = (TransactionInfoVo) transactionIterator.next();
             try {
-                List<StockPairInfoVo> pairList = transactionInfo.loadPairList();
-                StockPairInfoVo onePair = null;
-                List<StockPairInfoVo> samePairs;
+                List<PairInfoVo> pairList = transactionInfo.loadPairList();
+                PairInfoVo onePair = null;
+                List<PairInfoVo> samePairs;
                 if(pairList !=null){
                     for (pairIterator=pairList.iterator();pairIterator.hasNext();((List)samePairs).add(onePair)){
-                        onePair = (StockPairInfoVo) pairIterator.next();
-                        Integer key = Integer.parseInt(onePair.getTransactionInfo().getStockCode())*100000+onePair.getPairCode();
+                        onePair = (PairInfoVo) pairIterator.next();
+                        Integer key = Integer.parseInt(onePair.getTransactionInfo().getCode())*100000+onePair.getPairCode();
                         samePairs = pairMap.get(key);
                         if (samePairs == null){
                             samePairs = new ArrayList<>();
@@ -141,7 +140,7 @@ public class CheckExcelBillService extends AbstractParseExcelService {
             for (pairIterator = pairKeyList.iterator();pairIterator.hasNext();totalDiffAmount +=pairDiffAmount){
 
                 Integer pairKey = (Integer) pairIterator.next();
-                List<StockPairInfoVo> pairRecordList = pairMap.get(pairKey);
+                List<PairInfoVo> pairRecordList = pairMap.get(pairKey);
                 pairDiffAmount = this.checkPairList(pairRecordList);
             }
             System.out.println("totalDiffAmount:"+totalDiffAmount);
@@ -151,11 +150,11 @@ public class CheckExcelBillService extends AbstractParseExcelService {
 
     }
 
-    private  double checkPairList(List<StockPairInfoVo> pairRecordList){
+    private  double checkPairList(List<PairInfoVo> pairRecordList){
         if (pairRecordList.isEmpty()){
             return  0.0D;
         }else {
-            StockPairInfoVo lastRecord = pairRecordList.get(pairRecordList.size()-1);
+            PairInfoVo lastRecord = pairRecordList.get(pairRecordList.size()-1);
             if (pairRecordList.size() < 2){
                 this.outLogMessage(lastRecord, "配对记录只有一个，" + lastRecord.getTransactionInfo().getPair());
                 return 0.0D;
@@ -166,9 +165,9 @@ public class CheckExcelBillService extends AbstractParseExcelService {
                 Iterator pairIterator = pairRecordList.iterator();
 
                 while (pairIterator.hasNext()){
-                    StockPairInfoVo pi= (StockPairInfoVo) pairIterator.next();
-                    StockTransactionInfoVo transactionInfo = pi.getTransactionInfo();
-                    if (!transactionInfo.getStockCode().equals(lastRecord.getTransactionInfo().getStockCode())){
+                    PairInfoVo pi= (PairInfoVo) pairIterator.next();
+                    TransactionInfoVo transactionInfo = pi.getTransactionInfo();
+                    if (!transactionInfo.getCode().equals(lastRecord.getTransactionInfo().getCode())){
                         this.outLogMessage(pi,"证券编码不一样");
                     }
 
@@ -198,7 +197,7 @@ public class CheckExcelBillService extends AbstractParseExcelService {
         }
     }
 
-    private void outLogMessage(StockPairInfoVo pairInfo,String msg){
+    private void outLogMessage(PairInfoVo pairInfo, String msg){
         StringBuffer sb = new StringBuffer();
         sb.append("sheetName=").append(pairInfo.getTransactionInfo().getSheetName());
         sb.append(",rowIndex=").append(pairInfo.getTransactionInfo().getRowIndex());
